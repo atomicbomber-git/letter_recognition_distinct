@@ -1,0 +1,22 @@
+div.inputbox-row {
+    text-align: center;
+}
+
+div.inputbox {
+    display: inline-block;
+    vertical-align: top;
+    width: 35px;
+    height: 35px;
+}
+
+div.inputbox.box {
+    margin: 2px;
+}
+
+div.inputbox.active {
+    background: black;
+}
+
+textarea.textarea {
+    height: 300px;
+}
