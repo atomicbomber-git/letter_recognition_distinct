@@ -25,15 +25,6 @@ class App extends React.Component {
         this.network = new Architect.Perceptron(letterTiles.length, 5, 3);
         this.trainer = new Trainer(this.network);
 
-        // const width = 7;
-        // const height = 9;
-        // let tiles = [];
-
-        // let count = 0;
-        // for (let i = 0; i < width * height; i++) {
-        //     tiles.push({ id: count++, isActive: false });
-        // }
-
         this.trainingSet = this.generateTrainingSet.bind(this)(letterTiles.length, 10000);
         
         /* The only training set which outputs to true */
@@ -51,8 +42,6 @@ class App extends React.Component {
             input: letterC.tiles.map(tile => tile.isActive ? 1 : 0),
             output: [0, 0, 1]
         });
-
-        console.log(this.trainingSet);
 
         this.state = {
             tileWidth: letterWidth,
@@ -155,11 +144,7 @@ class App extends React.Component {
         });
 
         const formattedMatchRate = matchRate.map(n => numeral(n * 100).format("0.0") + "%");
-
-        const threshold = 0.925;
         
-
-
         return (
             <div className="container" style={ {maxWidth: "1000px"} }>
                 <div className="section">
