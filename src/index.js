@@ -6,7 +6,10 @@ import {Architect, Trainer} from "synaptic";
 import Chance from "chance";
 import "../node_modules/bulma/css/bulma.css";
 import "./index.css";
+
+import letterA from "./letter_a.json";
 import letterB from "./letter_b.json";
+import letterC from "./letter_c.json";
 
 class App extends React.Component {
     constructor(props) {
@@ -19,7 +22,7 @@ class App extends React.Component {
         this.chance = new Chance();
 
         /* Initialize the perceptron network and its trainer  */
-        this.network = new Architect.Perceptron(letterTiles.length, 5, 1);
+        this.network = new Architect.Perceptron(letterTiles.length, 5, 3);
         this.trainer = new Trainer(this.network);
 
         // const width = 7;
@@ -35,8 +38,18 @@ class App extends React.Component {
         
         /* The only training set which outputs to true */
         this.trainingSet.push({
-            input: letterTiles.map(tile => tile.isActive ? 1 : 0),
-            output: [1]
+            input: letterA.tiles.map(tile => tile.isActive ? 1 : 0),
+            output: [1, 0, 0]
+        });
+
+        this.trainingSet.push({
+            input: letterB.tiles.map(tile => tile.isActive ? 1 : 0),
+            output: [0, 1, 0]
+        });
+
+        this.trainingSet.push({
+            input: letterC.tiles.map(tile => tile.isActive ? 1 : 0),
+            output: [0, 0, 1]
         });
 
         console.log(this.trainingSet);
@@ -70,7 +83,7 @@ class App extends React.Component {
             }
             trainingSet.push({
                 input: input,
-                output: [0]
+                output: [0, 0, 0]
             });
         }
 
@@ -117,12 +130,34 @@ class App extends React.Component {
             "button is-primary is-small";
         
         const normalizedTiles = tiles.map(tile => tile.isActive ? 1 : 0)
+
         const matchRate = this.network.activate(normalizedTiles);
-        
+
+        const utilClasses = matchRate.map((rate) => {
+            if (rate > 0.9) {
+                return {
+                    progress: "progress is-success",
+                    tag: "tag is-success"
+                };     
+            }
+            else if (rate > 0.25) {
+                return {
+                    progress: "progress is-warning",
+                    tag: "tag is-warning"
+                };               
+            }
+            else {
+                return {
+                    progress: "progress is-danger",
+                    tag: "tag is-danger"
+                }; 
+            }
+        });
+
+        const formattedMatchRate = matchRate.map(n => numeral(n * 100).format("0.0") + "%");
+
         const threshold = 0.925;
-        const progressBarClass = matchRate > threshold ? "progress is-success" : "progress is-danger";
-        const tagClass = matchRate > threshold ? "tag is-success" : "tag is-danger";
-        const tagText = matchRate > threshold ? "Cocok" : "Tidak Cocok";
+        
 
 
         return (
@@ -134,9 +169,12 @@ class App extends React.Component {
                             <p className="subtitle is-6"> Klik pada kotak untuk menyalakan atau memadamkan </p>
                             
                             <div className="content">
-                                <p> Tingkat Kecocokan: {numeral(matchRate * 100).format("0.00")}%</p>
-                                <p> Cocok / Tidak: <span className={tagClass}>{tagText}</span> </p>
-                                <progress className={progressBarClass} value={matchRate * 100} max="100"></progress>
+                                <p> Kecocokan Dengan A: <span className={utilClasses[0].tag}> {formattedMatchRate[0]} </span> </p> 
+                                <progress className={utilClasses[0].progress} value={matchRate[0]}/>
+                                <p> Kecocokan Dengan B: <span className={utilClasses[1].tag}> {formattedMatchRate[1]} </span> </p> 
+                                <progress className={utilClasses[1].progress} value={matchRate[1]}/>
+                                <p> Kecocokan Dengan C: <span className={utilClasses[2].tag}> {formattedMatchRate[2]} </span> </p> 
+                                <progress className={utilClasses[2].progress} value={matchRate[2]}/>
                             </div>
                             
                             <TileContainer toggle={this.toggleTile} width={tileWidth} tiles={tiles}/>
