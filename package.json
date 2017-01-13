@@ -25,5 +25,5 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://github.com/atomicbomber-git/letter_recognition_distinct"
+  "homepage": "https://atomicbomber-git.github.io/letter_recognition_distinct"
 }
