@@ -85,12 +85,10 @@ class App extends React.Component {
 
         this.trainer.trainAsync(this.trainingSet, {
             rate: 0.2,
-            error: 0.0000005,
-            log: 100
+            error: 0.0000005
         })
         .then((results) => {
             this.setState({ isTraining: false, networkData: this.network.toJSON() });
-            console.log("The training process has finished!!!");
         });
     }
 
